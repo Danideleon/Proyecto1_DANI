@@ -95,7 +95,11 @@ public class BacklogManager {
 	 * @param product The product to be checked
 	 */
 	private void isDuplicateProduct(String product) {
-		
+		for(Product newProduct : products) {
+			if(newProduct.getProductName().equalsIgnoreCase(product)) {
+				throw new IllegalArgumentException("Product is a duplicate");
+			}
+		}
 	}
 	
 	/**
@@ -172,7 +176,7 @@ public class BacklogManager {
 		List<Task> tasks = currentProduct.getTasks();
 		for(Task task : tasks) {
 			if(task.getTaskId() == taskId) {
-				tasks.remove(taskId);
+				tasks.remove(task);
 				return;
 			}
 		}
@@ -189,6 +193,28 @@ public class BacklogManager {
 		if(currentProduct == null) {
 			return;
 		}
+		
+		int maxId = 0;
+		 
+		 //Find the max task ID in the task list
+		List<Task> tasks = currentProduct.getTasks();
+		 for (Task task : tasks) {
+			 int taskId = task.getTaskId();
+			 if (taskId > maxId) {
+				 maxId = taskId;
+			 }
+		 }
+		 
+		 //set the task counter to the max ID + 1
+		  int counter = maxId + 1;
+		 
+		 //If the list is empty, set the counter to 1
+		 if(maxId == 0) {
+			 counter = 1;
+		 }
+		 
+		 Task newTask = new Task(counter, title, type, creator, owner);
+		 currentProduct.addTask(newTask);
 	}
 	
 	/**
@@ -240,11 +266,7 @@ public class BacklogManager {
 		
 		String updateNameLower = updateName.toLowerCase();
 		
-		for (Product product : products) {
-			if(product != currentProduct && product.getProductName().toLowerCase().equals(updateNameLower)) {
-			throw new IllegalArgumentException("Product name already exists.");
-			}
-		}
+		isDuplicateProduct(updateNameLower);
 		
 		currentProduct.setProductName(updateName);
 	}
@@ -260,11 +282,7 @@ public class BacklogManager {
 		
 		String productNameLower = productName.toLowerCase();
 		
-		for (Product product : products) {
-			if (product.getProductName().toLowerCase().equals(productNameLower)) {
-				throw new IllegalArgumentException("Invalid product name.");
-			}
-		}
+		isDuplicateProduct(productNameLower);
 		
 		Product newProduct = new Product(productName);
 		products.add(newProduct);
@@ -291,6 +309,7 @@ public class BacklogManager {
 	 * Resets the Backlog Manager 
 	 */
 	protected void resetManager() {
-		// TODO Auto-generated method stub
+		products.clear();
+		currentProduct = null;
 	}
 }

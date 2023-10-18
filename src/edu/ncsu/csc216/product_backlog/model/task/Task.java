@@ -2,8 +2,8 @@ package edu.ncsu.csc216.product_backlog.model.task;
 
 import java.util.ArrayList;
 
+
 import edu.ncsu.csc216.product_backlog.model.command.Command;
-import edu.ncsu.csc216.product_backlog.model.command.Command.CommandValue;
 
 /**
  * Concrete class that represents a task tracked in the Product Backlog system.
@@ -586,7 +586,13 @@ public class Task {
 	 * @return The notes in the list related to a task
 	 */
 	public String getNotesList() {
-		return null;
+		String noteString = "";
+		
+		for(String note : notes) {
+			noteString += note + "\n";
+		}
+		
+		return noteString;
 	}
 	
 	@Override
@@ -611,7 +617,12 @@ public class Task {
 	 * @return A String array with the notes describing the task
 	 */
 	public String[] getNotesArray() {
-		return null;
+		String[] notesArray = new String[notes.size()];
+		
+		for(int i = 0; i < notes.size(); i++) {
+			notesArray[i] = notes.get(i);
+		}
+		return notesArray;
 	}
 	
 }
